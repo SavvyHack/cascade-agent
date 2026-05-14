@@ -4,17 +4,16 @@ from referee.game import (
     PlayerColor, Coord, Direction, Action,
     PlaceAction, MoveAction, EatAction, CascadeAction,
 )
-from agent.state import State, RED, BLUE
-from agent.moves import gen_all_moves
-from agent.search import Searcher
-from agent.placement import select_placement
+from .state import State, RED, BLUE
+from .moves import gen_all_moves
+from .search import Searcher
+from .placement import select_placement
 
 
 TOTAL_BUDGET = 180.0
 SAFETY_MARGIN = 5.0
 MIN_MOVE_TIME = 0.05
 MAX_MOVE_TIME = 8.0
-
 
 class Agent:
 

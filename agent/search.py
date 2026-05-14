@@ -2,9 +2,9 @@ from __future__ import annotations
 import time
 from typing import Callable
 from referee.game import Action, PlaceAction, MoveAction, EatAction, CascadeAction, Direction
-from agent.state import State, RED, BLUE, NCELLS, BOARD_N
-from agent.moves import gen_all_moves, gen_play_moves, gen_placement_moves
-from agent.evaluation import evaluate
+from .state import State, RED, BLUE, NCELLS, BOARD_N
+from .moves import gen_all_moves, gen_play_moves, gen_placement_moves
+from .evaluation import evaluate
 
 
 INF = 10_000_000

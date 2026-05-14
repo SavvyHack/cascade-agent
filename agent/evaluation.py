@@ -1,5 +1,5 @@
 from __future__ import annotations
-from agent.state import State, BOARD_N, NCELLS, RED, BLUE
+from .state import State, BOARD_N, NCELLS, RED, BLUE
 
 
 W_MATERIAL = 100

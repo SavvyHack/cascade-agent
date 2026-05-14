@@ -1,7 +1,7 @@
 from __future__ import annotations
 from referee.game import PlaceAction, Coord
-from agent.state import State, BOARD_N, NCELLS, RED, BLUE
-from agent.moves import gen_placement_moves
+from .state import State, BOARD_N, NCELLS, RED, BLUE
+from .moves import gen_placement_moves
 
 
 def _heuristic_score(state: State, action: PlaceAction) -> int:

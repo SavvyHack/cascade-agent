@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Iterator
 from referee.game import Action, PlaceAction, MoveAction, EatAction, CascadeAction, Coord, Direction
-from agent.state import State, BOARD_N, NCELLS, DIRS, DIR_NAMES, RED, BLUE
+from .state import State, BOARD_N, NCELLS, DIRS, DIR_NAMES, RED, BLUE
 
 
 _ADJACENT: list[list[tuple[int, int]]] = []

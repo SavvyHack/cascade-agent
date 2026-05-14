@@ -282,7 +282,7 @@ class State:
         return None
 
     def _has_any_legal_action(self) -> bool:
-        from agent.moves import has_any_legal_action
+        from .moves import has_any_legal_action
         return has_any_legal_action(self)
 
 
