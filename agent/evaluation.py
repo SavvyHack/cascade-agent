@@ -2,6 +2,8 @@ from __future__ import annotations
 from .state import State, BOARD_N, NCELLS
 
 
+TEMPO = 8                   # small initiative bonus to side-to-move;
+
 # Feature weights, in units of 1/50 of a token (so 50 = one token of material).
 # Material dominates; everything else is a tie-breaker among equal-material positions.
 W_MATERIAL = 50
@@ -131,7 +133,7 @@ def evaluate(state: State) -> int:
 
     # Small initiative bonus to side-to-move; state.turn is
     # +1 for RED, -1 for BLUE, so this naturally flips sign.
-    score += 8 * state.turn
+    score += TEMPO * state.turn
 
     return score
 
