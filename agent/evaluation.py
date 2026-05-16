@@ -2,7 +2,7 @@ from __future__ import annotations
 from .state import State, BOARD_N, NCELLS
 
 
-# Feature weights, in units of 1/100 of a token (so 100 = one token of material).
+# Feature weights, in units of 1/50 of a token (so 50 = one token of material).
 # Material dominates; everything else is a tie-breaker among equal-material positions.
 W_MATERIAL = 50
 W_STACK_COUNT = 5
@@ -10,7 +10,7 @@ W_CAPTURE_THREAT = 25       # bonus when we can EAT an adjacent enemy
 W_CAPTURE_RISK = 35         # asymmetric: defence weighted higher than offence
 W_EDGE_VULNERABILITY = 6    # per (edge-score x stack-height)
 W_CENTRE_BONUS = 1
-W_TEMPO = 8                 # small bonus for side to move
+              
 
 
 # Manhattan distance from each cell to the nearest edge. Used for edge-penalty
@@ -129,9 +129,9 @@ def evaluate(state: State) -> int:
     score -= W_EDGE_VULNERABILITY * red_edge_penalty
     score += W_EDGE_VULNERABILITY * blue_edge_penalty
 
-    # Tempo: small constant bonus for the side to move. state.turn is
+    # Small initiative bonus to side-to-move; state.turn is
     # +1 for RED, -1 for BLUE, so this naturally flips sign.
-    score += W_TEMPO * state.turn
+    score += 8 * state.turn
 
     return score
 
