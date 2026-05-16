@@ -1,9 +1,8 @@
 from __future__ import annotations
 import time
-from typing import Callable
-from referee.game import Action, PlaceAction, MoveAction, EatAction, CascadeAction, Direction
-from .state import State, RED, BLUE, NCELLS, BOARD_N
-from .moves import gen_all_moves, gen_play_moves, gen_placement_moves
+from referee.game import Action, PlaceAction, MoveAction, EatAction, CascadeAction
+from .state import State, RED, BOARD_N
+from .moves import gen_all_moves, gen_play_moves
 from .evaluation import evaluate
 
 

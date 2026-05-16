@@ -1,6 +1,6 @@
 from __future__ import annotations
-from referee.game import PlaceAction, Coord
-from .state import State, BOARD_N, NCELLS, RED, BLUE
+from referee.game import PlaceAction
+from .state import State, BOARD_N, NCELLS, RED
 from .moves import gen_placement_moves
 
 

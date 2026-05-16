@@ -1,8 +1,8 @@
 from __future__ import annotations
-from .state import State, BOARD_N, NCELLS, RED, BLUE
+from .state import State, BOARD_N, NCELLS
 
 
-W_MATERIAL = 100
+W_MATERIAL = 50
 W_STACK = 5
 W_CAPTURE_THREAT = 25
 W_CAPTURE_RISK = 35

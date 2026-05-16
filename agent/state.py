@@ -1,8 +1,7 @@
 from __future__ import annotations
 import random
 from dataclasses import dataclass
-from typing import Iterable
-from referee.game import Action, PlaceAction, MoveAction, EatAction, CascadeAction, Coord, Direction, PlayerColor
+from referee.game import Action, PlaceAction, MoveAction, EatAction, CascadeAction, Coord, Direction
 
 BOARD_N = 8
 NCELLS = BOARD_N * BOARD_N

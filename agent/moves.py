@@ -1,6 +1,5 @@
 from __future__ import annotations
-from typing import Iterator
-from referee.game import Action, PlaceAction, MoveAction, EatAction, CascadeAction, Coord, Direction
+from referee.game import Action, PlaceAction, MoveAction, EatAction, CascadeAction, Coord
 from .state import State, BOARD_N, NCELLS, DIRS, DIR_NAMES, RED, BLUE
 
 
