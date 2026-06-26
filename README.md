@@ -37,10 +37,9 @@ applied, so any agent here can be played against any other.
 │   ├── iterative_deepening_agent/
 │   ├── minimax_fixed_depth_agent/
 │   └── zobrist_agent/
-├── referee/                          # Provided game driver (unmodified)
+├── referee/                          # Game driver
 ├── report.pdf                        # Technical report: design, evaluation, results
-├── Cascade rules.pdf                 # Game rules
-└── team.py                           # Submission metadata
+└── Cascade rules.pdf                 # Game rules
 ```
 
 `agent` is the primary agent. `agentv2` shares its overall design with a set of
