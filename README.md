@@ -43,11 +43,11 @@ applied, so any agent here can be played against any other.
 └── team.py                           # Submission metadata
 ```
 
-`agent` is the primary submission. `agentv2` shares its overall design with a set of
+`agent` is the primary agent. `agentv2` shares its overall design with a set of
 additional refinements, and is kept separate so the two can be played head-to-head to
 measure their effect (see the report for details). The packages under `Baseline/` and
-`Benchmarks/` are sparring opponents only — they form a ladder of increasing strength
-for development testing and are not part of the competitive submission.
+`Benchmarks/` are sparring opponents, they form a ladder of increasing strength
+for testing.
 
 ---
 
