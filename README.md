@@ -1,31 +1,26 @@
-# Cascade — Adversarial Search Agent
+# Cascade — Game-Playing Agent
 
-A competitive game-playing agent for **Cascade**, a two-player, perfect-information
-board game played on an 8×8 grid. The agent selects moves under a strict per-game
-time budget using iterative-deepening alpha-beta search, and ships with a suite of
-benchmark opponents for local evaluation.
+A game-playing agent for **Cascade**, accompanied by a suite of opponent agents
+used for local testing and strength evaluation.
 
-> Full game mechanics are described in the accompanying rules document, and the
-> internals of the search and evaluation are covered in [`report.pdf`](report.pdf).
-> This README focuses on what the project *is*, how it is organised, and how to run it.
+The rules of the game are described in [`Cascade rules.pdf`](Cascade%20rules.pdf),
+and the design, implementation, and experimental results of the primary agent are
+documented in [`report.pdf`](report.pdf). This README does not restate either; it
+covers what the repository contains, how it is organised, and how to run it.
 
 ---
 
-## Objective
+## Project goal
 
-The project goal is to build an agent that plays Cascade as strongly as possible
-within the constraints imposed by the game's referee: a fixed CPU-time allowance
-for the entire game and a per-process memory ceiling. A submission is a Python
-package exposing an `Agent` class with three methods the referee drives:
+The aim of the project is to produce an agent that plays Cascade as strongly as
+possible while staying within the CPU-time and memory limits enforced by the
+provided referee. The game's own objective and mechanics are covered in the rules
+document; the strategy and algorithms used to pursue them are covered in the report.
 
-- `__init__(color, **referee)` — set up internal state for the assigned side.
-- `action(**referee)` — return the chosen action for the current turn.
-- `update(color, action, **referee)` — observe an applied action (either player's)
-  and keep the internal board in sync with the referee.
-
-Success is measured by win rate against opponents of increasing strength while
-never exceeding the time or memory limits — i.e. the engine must spend its budget
-where it matters and degrade gracefully when time is short.
+Every agent in this repository is a self-contained Python package that exposes an
+`Agent` class. The referee instantiates one `Agent` per side and drives the game by
+requesting an action each turn and notifying each agent of actions as they are
+applied, so any agent here can be played against any other.
 
 ---
 
@@ -33,47 +28,33 @@ where it matters and degrade gracefully when time is short.
 
 ```
 .
-├── cascade_engine/          # Primary agent (tournament entry point)
-├── cascade_engine_v2/       # Tuned variant with additional search refinements
-├── benchmarks/              # Opponents used for local testing
-│   ├── random/              #   uniform-random legal move
-│   ├── greedy/              #   1-ply material-maximising lookahead
-│   ├── minimax_fixed_depth/ #   fixed-depth minimax with a tactical shortcut
-│   ├── iddfs_tt/            #   iterative-deepening alpha-beta + transposition table
-│   └── zobrist_engine/      #   alpha-beta with a Zobrist-hashed transposition table
-├── referee/                 # Provided game driver (do not modify)
-├── report.pdf               # Technical report: design, evaluation, results
-└── team.py                  # Team / submission metadata
+├── agent/                            # Primary agent — the intended entry point
+├── agentv2/                          # Tuned variant of the primary agent
+├── Baseline/                         # Simple reference opponents
+│   ├── random_agent/                 #   chooses a legal move at random
+│   └── greedy_agent/                 #   one-step lookahead opponent
+├── Benchmarks/                       # Stronger search-based opponents
+│   ├── iterative_deepening_agent/
+│   ├── minimax_fixed_depth_agent/
+│   └── zobrist_agent/
+├── referee/                          # Provided game driver (unmodified)
+├── report.pdf                        # Technical report: design, evaluation, results
+├── Cascade rules.pdf                 # Game rules
+└── team.py                           # Submission metadata
 ```
 
-Each directory under `cascade_engine*` and `benchmarks/` is a self-contained Python
-package exposing an `Agent` class, so any one can be pitted against any other.
-
-### The engine
-
-Two variants of the same core are provided. **`cascade_engine`** is the primary
-agent and the intended entry point. **`cascade_engine_v2`** keeps the same
-architecture and adds further search refinements; it is included so the two can be
-played head-to-head to measure the marginal value of those additions. Both maintain
-their own internal board representation rather than re-querying the referee, run a
-positional heuristic during the placement phase, and switch to time-bounded search
-during play. The algorithmic details, evaluation features, and tuning rationale are
-documented in `report.pdf`.
-
-### The benchmarks
-
-The `benchmarks/` packages exist purely to provide a measurable ladder of opponents
-during development, from a random baseline up to alternative search engines. They
-are not part of the competitive submission. See the attribution note at the bottom.
+`agent` is the primary submission. `agentv2` shares its overall design with a set of
+additional refinements, and is kept separate so the two can be played head-to-head to
+measure their effect (see the report for details). The packages under `Baseline/` and
+`Benchmarks/` are sparring opponents only — they form a ladder of increasing strength
+for development testing and are not part of the competitive submission.
 
 ---
 
 ## Requirements
 
 - **Python 3.12+**
-- No third-party packages are required to run local games — the engine and referee
-  rely only on the standard library.
-- The optional remote-play server mode additionally requires `websockets`:
+- **`websockets`** — imported by the referee at startup (including for local games):
 
   ```bash
   pip install websockets
@@ -83,80 +64,84 @@ A virtual environment is recommended:
 
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install websockets
 ```
 
 ---
 
 ## Running a game
 
-Games are run through the provided referee. The two positional arguments are
-**package specifications** for the RED and BLUE players — the dotted import path of
-a package containing an `Agent` class:
+Games are run through the referee from the repository root. The two positional
+arguments are **package specifications** for the RED and BLUE players — the dotted
+import path of a package containing an `Agent` class:
 
 ```bash
 python -m referee <RED> <BLUE>
 ```
 
+The nested packages are addressed with dotted paths (note the capitalised top-level
+folder names). Run all commands from the repository root.
+
 ### Examples
 
-Play the primary engine (RED) against the greedy benchmark (BLUE):
+Primary agent (RED) vs. the greedy baseline (BLUE):
 
 ```bash
-python -m referee cascade_engine benchmarks.greedy
+python -m referee agent Baseline.greedy_agent
 ```
 
-Pit the two engine variants against each other:
+The two engine variants head-to-head:
 
 ```bash
-python -m referee cascade_engine cascade_engine_v2
+python -m referee agent agentv2
 ```
 
-Sanity-check against the random baseline:
+Against a stronger search-based opponent:
 
 ```bash
-python -m referee cascade_engine benchmarks.random
+python -m referee agent Benchmarks.zobrist_agent
 ```
 
-If a package exposes its agent class under a different name, append it after a colon:
+Quick sanity check against the random baseline:
 
 ```bash
-python -m referee cascade_engine benchmarks.iddfs_tt:Agent
+python -m referee agent Baseline.random_agent
 ```
+
+If a package exposes its agent class under a name other than `Agent`, append it after
+a colon, e.g. `Benchmarks.iterative_deepening_agent:Agent`.
 
 ### Useful options
 
-Run `python -m referee --help` for the full list. The most relevant:
+Run `python -m referee --help` for the complete list. The most relevant:
 
-| Option | Effect |
-|---|---|
-| `-t <seconds>` | CPU-time limit per agent for the whole game. |
-| `-s <MB>` | Memory limit per agent. |
-| `-w <seconds>` | Wait time between turns (`-w 0` runs as fast as possible). |
-| `-v <0–3>` | Verbosity; higher levels print board state and per-move detail. |
-| `-l [file]` | Write a game log to disk (defaults to `game.log`). |
+| Option        | Effect                                                        |
+|---------------|---------------------------------------------------------------|
+| `-t <seconds>`| CPU-time limit per agent for the whole game.                  |
+| `-s <MB>`     | Memory limit per agent.                                       |
+| `-w <seconds>`| Wait time between turns; `-w 0` runs as fast as possible.     |
+| `-v <0–3>`    | Verbosity; higher levels print board state and per-move info. |
+| `-l [file]`   | Write a game log to disk (defaults to `game.log`).            |
 
-Example — a fast, silent batch-style game with an explicit time limit:
+Example — a fast, low-verbosity run suitable for batch testing:
 
 ```bash
-python -m referee -w 0 -v 1 -t 180 cascade_engine benchmarks.zobrist_engine
+python -m referee -w 0 -v 1 agent Benchmarks.minimax_fixed_depth_agent
 ```
 
 ---
 
-## Reproducing the evaluation
+## Further reading
 
-The win-rate experiments, opponent set, and runtime measurements that justify the
-design decisions are reported in [`report.pdf`](report.pdf). To reproduce a single
-matchup from that evaluation, run the corresponding `python -m referee` command with
-the time limit set to the value documented there.
+- **Game rules** — [`Cascade rules.pdf`](Cascade%20rules.pdf)
+- **Agent design, evaluation methodology, and results** — [`report.pdf`](report.pdf)
 
 ---
 
 ## Attribution
 
-The `cascade_engine*` packages are the authors' own work. The `referee/` package is
-the course-provided game driver and is unmodified. The opponents under `benchmarks/`
-are used solely for local strength testing; where any originated from third parties,
-they remain the property of their respective authors and are included here only as
-sparring partners, not as part of the competitive submission.
+`agent` and `agentv2` are the authors' own work. The `referee/` package is the
+course-provided game driver and is unmodified. The opponents under `Baseline/` and
+`Benchmarks/` are included solely as local testing partners; where any originated
+from third parties they remain the property of their respective authors.
