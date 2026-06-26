@@ -138,10 +138,3 @@ python -m referee -w 0 -v 1 agent Benchmarks.minimax_fixed_depth_agent
 - **Agent design, evaluation methodology, and results** — [`report.pdf`](report.pdf)
 
 ---
-
-## Attribution
-
-`agent` and `agentv2` are the authors' own work. The `referee/` package is the
-course-provided game driver and is unmodified. The opponents under `Baseline/` and
-`Benchmarks/` are included solely as local testing partners; where any originated
-from third parties they remain the property of their respective authors.
